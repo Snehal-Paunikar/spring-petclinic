@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-petclinic
+  name: spring-petclinic-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: spring-petclinic
@@ -13,26 +13,10 @@ spec:
         app: spring-petclinic
     spec:
       containers:
-        - name: spring-petclinic
-          image: snehalacr.azurecr.io/spring-petclinic:latest
-          ports:
-            - containerPort: 8080
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 20
+      - name: spring-petclinic
+        image: snehalacr.azurecr.io/spring-petclinic:v1
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: acr-auth
